@@ -1,345 +1,455 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculateur de Moyenne</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --text: #0f172a;
-            --text-secondary: #475569;
-            --primary: #16a34a;
-            --box-green-bg: #f0fdf4;
-            --box-green-border: #bbf7d0;
-            --box-green-hover: #e6f4ea;
-            --danger: #dc2626;
-            --border: #e2e8f0;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Calculateur de Moyenne</title>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            padding: 2rem 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
+<style>
+:root{
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#0f172a;
+    --muted:#64748b;
+    --line:#e2e8f0;
 
-        .wrapper {
-            width: 100%;
-            max-width: 700px;
-            background: var(--surface);
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
-        }
+    --primary:#10b981;
+    --primary-soft:#ecfdf5;
 
-        header {
-            margin-bottom: 2rem;
-            text-align: center;
-        }
+    --danger:#ef4444;
+    --danger-soft:#fef2f2;
 
-        header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            color: var(--text);
-            margin-bottom: 0.25rem;
-        }
+    --shadow:
+    0 1px 2px rgba(15,23,42,.04),
+    0 8px 24px rgba(15,23,42,.06);
 
-        header p {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
+    --radius:18px;
+}
 
-        .modules-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Inter,sans-serif;
+}
 
-        .row {
-            display: grid;
-            grid-template-columns: 2.5fr 1fr 1fr 1fr;
-            align-items: center;
-            padding: 1rem;
-            background: var(--box-green-bg);
-            border: 1px solid var(--box-green-border);
-            border-radius: 12px;
-            gap: 1rem;
-            transition: all 0.2s ease;
-        }
+body{
+    background:
+    radial-gradient(circle at top left,#ecfdf5 0%,transparent 25%),
+    radial-gradient(circle at bottom right,#eff6ff 0%,transparent 25%),
+    var(--bg);
 
-        .row:hover {
-            background: var(--box-green-hover);
-            border-color: #86efac;
-        }
+    min-height:100vh;
+    padding:32px 16px;
+    color:var(--text);
 
-        .module-info {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
+    display:flex;
+    justify-content:center;
+}
 
-        .module-name {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #14532d;
-        }
+.wrapper{
+    width:100%;
+    max-width:760px;
+}
 
-        .module-name.rtl {
-            direction: rtl;
-            text-align: right;
-        }
+.hero{
+    margin-bottom:24px;
+    text-align:center;
+}
 
-        .module-coeff {
-            font-size: 0.75rem;
-            color: #166534;
-            font-weight: 500;
-        }
+.hero h1{
+    font-size:2rem;
+    font-weight:800;
+    letter-spacing:-0.04em;
+    margin-bottom:8px;
+}
 
-        .input-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-        }
+.hero p{
+    color:var(--muted);
+    font-size:.95rem;
+}
 
-        .input-wrapper label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #166534;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
+.modules{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+}
 
-        input[type="number"] {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid var(--box-green-border);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            text-align: center;
-            color: var(--text);
-            background: var(--surface);
-            outline: none;
-            transition: all 0.15s;
-        }
+.card{
+    background:var(--card);
+    border:1px solid rgba(226,232,240,.8);
+    border-radius:var(--radius);
+    padding:18px;
+    box-shadow:var(--shadow);
 
-        input[type="number"]:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
-        }
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr auto;
+    gap:18px;
+    align-items:center;
 
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+    transition:
+    transform .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
 
-        .score-display {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            justify-content: center;
-        }
+.card:hover{
+    transform:translateY(-2px);
+    border-color:#cbd5e1;
+}
 
-        .score-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #166534;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
-        }
+.module{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
 
-        .score-value {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-secondary);
-        }
+.module-name{
+    font-size:1rem;
+    font-weight:700;
+    letter-spacing:-0.02em;
+}
 
-        .score-value.pass { color: var(--primary); }
-        .score-value.fail { color: var(--danger); }
+.module-name.rtl{
+    direction:rtl;
+    text-align:right;
+}
 
-        .summary-card {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: #f1f5f9;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.module-coeff{
+    font-size:.78rem;
+    color:var(--muted);
+    font-weight:600;
+}
 
-        .summary-left h2 {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            margin-bottom: 0.25rem;
-        }
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
 
-        .summary-left p {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
+.field label{
+    font-size:.72rem;
+    color:var(--muted);
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+}
 
-        .global-average {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            color: var(--text-secondary);
-        }
+.input-wrap{
+    position:relative;
+}
 
-        .global-average.pass { color: var(--primary); }
-        .global-average.fail { color: var(--danger); }
+input{
+    width:100%;
+    border:1px solid var(--line);
+    background:#fafcff;
 
-        footer {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            letter-spacing: 0.025em;
-        }
+    padding:14px 12px;
+    border-radius:14px;
 
-        @media (max-width: 640px) {
-            .wrapper { padding: 1.25rem; }
-            .row { grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1.25rem; }
-            .module-info { grid-column: span 2; border-bottom: 1px dashed var(--box-green-border); padding-bottom: 0.5rem; }
-            .module-name.rtl { text-align: left; }
-            .score-display { align-items: flex-start; grid-column: span 2; margin-top: 0.25rem; padding-top: 0.5rem; border-top: 1px dashed var(--box-green-border); }
-        }
-    </style>
+    font-size:1rem;
+    font-weight:600;
+    color:var(--text);
+
+    text-align:center;
+
+    transition:
+    border-color .2s ease,
+    background .2s ease,
+    box-shadow .2s ease;
+}
+
+input:focus{
+    outline:none;
+    border-color:var(--primary);
+    background:#fff;
+    box-shadow:0 0 0 4px rgba(16,185,129,.08);
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button{
+    -webkit-appearance:none;
+    margin:0;
+}
+
+.score-box{
+    min-width:92px;
+    text-align:right;
+}
+
+.score-label{
+    font-size:.7rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--muted);
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.score{
+    font-size:1.4rem;
+    font-weight:800;
+    letter-spacing:-0.04em;
+    color:var(--muted);
+
+    transition:color .2s ease;
+}
+
+.score.pass{
+    color:var(--primary);
+}
+
+.score.fail{
+    color:var(--danger);
+}
+
+.summary{
+    margin-top:28px;
+
+    background:var(--card);
+    border-radius:24px;
+
+    padding:24px;
+    box-shadow:var(--shadow);
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.summary-left{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+}
+
+.summary-left span:first-child{
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--muted);
+    font-weight:700;
+}
+
+.summary-left span:last-child{
+    font-size:.95rem;
+    color:var(--muted);
+}
+
+.global{
+    font-size:3rem;
+    font-weight:800;
+    letter-spacing:-0.06em;
+    color:var(--muted);
+
+    transition:color .2s ease;
+}
+
+.global.pass{
+    color:var(--primary);
+}
+
+.global.fail{
+    color:var(--danger);
+}
+
+.footer{
+    margin-top:18px;
+    text-align:center;
+    font-size:.72rem;
+    color:var(--muted);
+    letter-spacing:.04em;
+}
+
+@media(max-width:700px){
+
+.card{
+    grid-template-columns:1fr;
+}
+
+.score-box{
+    text-align:left;
+}
+
+.summary{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:18px;
+}
+
+.global{
+    font-size:2.4rem;
+}
+}
+</style>
 </head>
+
 <body>
 
-    <div class="wrapper">
-        <header>
-            <h1>Calculateur de Moyenne</h1>
-            <p>Master e-Management</p>
-        </header>
+<div class="wrapper">
 
-        <div class="modules-container" id="modulesList"></div>
+<div class="hero">
+    <h1>Calculateur de Moyenne</h1>
+    <p>Master e-Management — TD 40% · Cours 60%</p>
+</div>
 
-        <div class="summary-card">
-            <div class="summary-left">
-                <h2>Moyenne Générale</h2>
-                <p>Coefficient Global: <span id="displayTotalCoeff">15</span></p>
-            </div>
-            <div class="global-average" id="globalAverage">0.00</div>
-        </div>
+<div class="modules" id="modules"></div>
 
-        <footer>
-            ( powered by aymen laouedj )
-        </footer>
+<div class="summary">
+    <div class="summary-left">
+        <span>Moyenne Générale</span>
+        <span>Total coefficient : <strong id="coeffDisplay"></strong></span>
     </div>
 
+    <div class="global" id="globalAverage">0.00</div>
+</div>
+
+<div class="footer">
+    powered by aymen laouedj
+</div>
+
+</div>
+
 <script>
-    const dataset = [
-        { name: "e-crm", coeff: 2 },
-        { name: "الذكاء الإقتصادي", coeff: 2, rtl: true },
-        { name: "e-scm", coeff: 2 },
-        { name: "methadology", coeff: 2 },
-        { name: "e-project managment", coeff: 2 },
-        { name: "أساليب كمية للإدارة", coeff: 2, rtl: true }, 
-        { name: "قانون العقود الإلكترونية", coeff: 2, rtl: true }, 
-        { name: "english", coeff: 1 }
-    ];
+const data = [
+ {name:"e-crm",coeff:2},
+ {name:"الذكاء الإقتصادي",coeff:2},
+ {name:"إدارة سلسلة الإمداد الإلكترونية",coeff:2},
+ {name:"منهجية إعداد مذكرة الماستر",coeff:2},
+ {name:"إدارة المشاريع الإلكترونية",coeff:2},
+ {name:"أساليب كمية للإدارة",coeff:2,rtl:true},
+ {name:"قانون العقود الإلكترونية",coeff:2,rtl:true},
+ {name:"english",coeff:1}
+];
 
-    const container = document.getElementById('modulesList');
-    let totalCoeff = 0;
+const container = document.getElementById("modules");
 
-    dataset.forEach((item) => {
-        totalCoeff += item.coeff;
-        const row = document.createElement('div');
-        row.className = 'row';
-        row.setAttribute('data-coeff', item.coeff);
-        
-        const alignmentClass = item.rtl ? 'module-name rtl' : 'module-name';
+const TOTAL_COEFF = data.reduce((a,b)=>a+b.coeff,0);
 
-        row.innerHTML = `
-            <div class="module-info">
-                <span class="${alignmentClass}">${item.name}</span>
-                <span class="module-coeff">Coefficient: ${item.coeff}</span>
-            </div>
-            <div class="input-wrapper">
-                <label>Note TD</label>
-                <input type="number" class="td-input" min="0" max="20" step="0.25" placeholder="00" oninput="runCalculations()">
-            </div>
-            <div class="input-wrapper">
-                <label>Cours</label>
-                <input type="number" class="cours-input" min="0" max="20" step="0.25" placeholder="00" oninput="runCalculations()">
-            </div>
-            <div class="score-display">
-                <span class="score-label">Moyenne</span>
-                <span class="score-value module-output">0.00</span>
-            </div>
-        `;
-        container.appendChild(row);
-    });
+document.getElementById("coeffDisplay").textContent = TOTAL_COEFF;
 
-    document.getElementById('displayTotalCoeff').innerText = totalCoeff;
+data.forEach((m,index)=>{
 
-    function runCalculations() {
-        const rows = document.querySelectorAll(".row");
-        let aggregatedPoints = 0;
-        const fixedTotalCoeff = 15; 
+const card = document.createElement("div");
 
-        rows.forEach(row => {
-            const tdVal = row.querySelector(".td-input").value;
-            const coursVal = row.querySelector(".cours-input").value;
-            const coeff = parseFloat(row.getAttribute("data-coeff"));
-            const outputElement = row.querySelector(".module-output");
+card.className = "card";
 
-            if (tdVal !== "" || coursVal !== "") {
-                const td = parseFloat(tdVal) || 0;
-                const cours = parseFloat(coursVal) || 0;
-                
-                const moduleAvg = (td * 0.4) + (cours * 0.6);
-                outputElement.innerText = moduleAvg.toFixed(2);
-                
-                if (moduleAvg >= 10) {
-                    outputElement.className = "score-value pass";
-                } else {
-                    outputElement.className = "score-value fail";
-                }
-                
-                aggregatedPoints += (moduleAvg * coeff);
-            } else {
-                outputElement.innerText = "0.00";
-                outputElement.className = "score-value";
-            }
-        });
+card.innerHTML = `
+<div class="module">
+    <div class="module-name ${m.rtl ? 'rtl' : ''}">
+        ${m.name}
+    </div>
 
-        const finalAverage = aggregatedPoints / fixedTotalCoeff;
-        const globalDisplay = document.getElementById("globalAverage");
-        
-        globalDisplay.innerText = finalAverage.toFixed(2);
+    <div class="module-coeff">
+        Coefficient ${m.coeff}
+    </div>
+</div>
 
-        if (aggregatedPoints > 0) {
-            if (finalAverage >= 10) {
-                globalDisplay.className = "global-average pass";
-            } else {
-                globalDisplay.className = "global-average fail";
-            }
-        } else {
-            globalDisplay.className = "global-average";
-            globalDisplay.innerText = "0.00";
-        }
-    }
+<div class="field">
+    <label>TD</label>
+
+    <div class="input-wrap">
+        <input
+        type="number"
+        class="td"
+        min="0"
+        max="20"
+        step="0.25"
+        placeholder="00">
+    </div>
+</div>
+
+<div class="field">
+    <label>Cours</label>
+
+    <div class="input-wrap">
+        <input
+        type="number"
+        class="cc"
+        min="0"
+        max="20"
+        step="0.25"
+        placeholder="00">
+    </div>
+</div>
+
+<div class="score-box">
+    <div class="score-label">
+        Moyenne
+    </div>
+
+    <div class="score">
+        --
+    </div>
+</div>
+`;
+
+container.appendChild(card);
+});
+
+document.addEventListener("input",e=>{
+
+if(!e.target.matches(".td,.cc")) return;
+
+calculate();
+
+});
+
+function calculate(){
+
+let total = 0;
+
+document.querySelectorAll(".card").forEach((card,index)=>{
+
+const tdValue = card.querySelector(".td").value;
+const ccValue = card.querySelector(".cc").value;
+
+const score = card.querySelector(".score");
+
+if(tdValue === "" || ccValue === ""){
+
+score.textContent = "--";
+score.className = "score";
+
+return;
+
+}
+
+const td = Math.min(20,Math.max(0,parseFloat(tdValue)));
+const cc = Math.min(20,Math.max(0,parseFloat(ccValue)));
+
+const avg = td * 0.4 + cc * 0.6;
+
+score.textContent = avg.toFixed(2);
+
+score.className =
+`score ${avg >= 10 ? 'pass' : 'fail'}`;
+
+total += avg * data[index].coeff;
+
+});
+
+const global = total / TOTAL_COEFF;
+
+const globalElement =
+document.getElementById("globalAverage");
+
+globalElement.textContent =
+global.toFixed(2);
+
+globalElement.className =
+`global ${global >= 10 ? 'pass' : 'fail'}`;
+
+if(total === 0){
+
+globalElement.textContent = "0.00";
+globalElement.className = "global";
+
+}
+}
 </script>
+
 </body>
 </html>
